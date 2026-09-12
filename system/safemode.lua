@@ -1,0 +1,2 @@
+term.clear(); term.setCursorPos(1,1); term.setTextColor(colors.yellow); print("TempOS SAFE MODE"); print("Only diagnostics and recovery tools are enabled."); print("Devices: "..#peripheral.getNames()); print("Filesystem free: "..tostring(fs.getFreeSpace("/"))); print(); print("Press Enter to start minimal desktop or R for recovery.")
+while true do local e,a=os.pullEvent(); if e=="key" then if a==keys.enter then shell.run("/system/kernel.lua"); return elseif a==keys.r then shell.run("/boot/recovery.lua"); return end end end
