@@ -5,9 +5,9 @@ local function scan(path)
   return checked,threats
 end
 while true do
-  local w,h=term.getSize(); T.fill(1,1,w,h,T.bg); T.text(2,2,"TempOS Security",T.accent2); T.text(3,4,"Quick Scan",T.text); T.text(3,6,"Full Scan",T.text); T.text(3,8,"Change password",T.text); T.text(2,h,"[1] quick [2] full [3] password [ESC] exit",T.muted)
+  local w,h=term.getSize(); T.fill(1,1,w,h,T.bg); T.text(2,2,"TempOS Security",T.accent2); T.text(3,4,"Quick Scan",T.fg); T.text(3,6,"Full Scan",T.fg); T.text(3,8,"Password",T.fg); T.text(2,h,"[1] quick [2] full [3] password [ESC] exit",T.muted)
   local e,a=os.pullEvent(); if e=="key" and a==keys.esc then break end
-  if e=="key" and a==keys.one then local n,t=scan("/apps"); term.clear(); term.setCursorPos(2,2); print("Quick Scan complete: "..n.." files"); for _,v in ipairs(t) do print("WARNING: "..v) end; if #t==0 then print("No heuristic findings.") end; os.pullEvent("key") end
-  if e=="key" and a==keys.two then local n,t=scan("/"); term.clear(); term.setCursorPos(2,2); print("Full Scan complete: "..n.." files"); for _,v in ipairs(t) do print("WARNING: "..v) end; if #t==0 then print("No heuristic findings.") end; os.pullEvent("key") end
-  if e=="key" and a==keys.three then term.clear(); term.setCursorPos(2,2); print("Password protection is managed by Recovery Mode in this release."); os.pullEvent("key") end
+  if e=="key" and a==keys.one then local n,t=scan("/apps"); term.clear(); T.text(2,2,"Quick Scan: "..n.." files",T.accent2); for i,v in ipairs(t) do T.text(2,2+i,"WARNING: "..v,T.danger) end; if #t==0 then T.text(2,4,"No heuristic findings.",T.success) end; os.pullEvent("key") end
+  if e=="key" and a==keys.two then local n,t=scan("/"); term.clear(); T.text(2,2,"Full Scan: "..n.." files",T.accent2); for i,v in ipairs(t) do T.text(2,2+i,"WARNING: "..v,T.danger) end; if #t==0 then T.text(2,4,"No heuristic findings.",T.success) end; os.pullEvent("key") end
+  if e=="key" and a==keys.three then term.clear(); T.text(2,2,"Password protection is managed by Recovery Mode.",T.muted); os.pullEvent("key") end
 end
