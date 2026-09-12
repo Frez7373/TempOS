@@ -1,4 +1,4 @@
-local VERSION="1.0.0"
+local VERSION="1.0.1"
 local T=dofile("/ui/theme.lua")
 local P=dofile("/system/peripherals.lua")
 local N=dofile("/system/network.lua")
@@ -24,11 +24,10 @@ local function chooseScreen()
     if d.type=="monitor" then
       local ok,m=pcall(peripheral.wrap,d.side)
       if ok and m then
-        local okSize=m.getSize and pcall(m.getSize) or false
         if m.setTextScale then pcall(m.setTextScale,1) end
-        if okSize then
+        local okSize,mw,mh=pcall(m.getSize)
+        if okSize and type(mw)=="number" and type(mh)=="number" then
           monitor=m
-          local mw,mh=m.getSize()
           return window.create(m,1,1,mw,mh,true),d.side
         end
       end
