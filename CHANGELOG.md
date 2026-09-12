@@ -1,14 +1,8 @@
 # Changelog
 
 ## 1.0.0
-
-- Modular TempOS bootloader and startup flow
-- Recovery and Safe Mode
-- Kernel runtime, event bus, process registry
-- Touch-aware desktop UI
-- Settings, File Manager, Terminal, Calculator, Clock
-- System Information, Task Manager, Text Editor
-- Security, Device Manager, Network and Updater apps
-- External monitor, modem, speaker, printer and disk-drive discovery
-- GitHub installer and release manifest
-- Crash and boot logging
+- Stabilized the boot path around a dedicated TempOS bootloader.
+- Added filesystem, peripheral, kernel, desktop and recovery startup checks.
+- Added animated boot progress.
+- Unified the release manifest and installer on version 1.0.0.
+- Preserved the modular application and service architecture.
