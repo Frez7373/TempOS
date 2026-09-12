@@ -15,11 +15,31 @@ _G.TempOS={version=VERSION,boot=os.epoch("utc"),settings=loadSettings(),events=E
 TempOS.log=function(kind,msg) local f=fs.open("/tempOS/logs/"..kind..".log","a"); if f then f.writeLine(os.date("!%Y-%m-%dT%H:%M:%SZ").." "..tostring(msg)); f.close() end end
 TempOS.notify=function(msg,kind) TempOS.events:emit("notify",msg,kind or "info") end
 TempOS.saveSettings=function() local f=fs.open(DATA,"w"); f.write(textutils.serialise(TempOS.settings)); f.close() end
+local native=term.native()
+local screen=native
+local screenSide="term"
+local monitor=nil
 local function chooseScreen()
-  for _,d in ipairs(P.scan()) do if d.type=="monitor" then local ok,m=pcall(peripheral.wrap,d.side); if ok and m then m.setTextScale(1); return m,d.side end end end
-  return term,"term"
+  for _,d in ipairs(P.scan()) do
+    if d.type=="monitor" then
+      local ok,m=pcall(peripheral.wrap,d.side)
+      if ok and m then
+        local okSize=m.getSize and pcall(m.getSize) or false
+        if m.setTextScale then pcall(m.setTextScale,1) end
+        if okSize then
+          monitor=m
+          local mw,mh=m.getSize()
+          return window.create(m,1,1,mw,mh,true),d.side
+        end
+      end
+    end
+  end
+  return native,"term"
 end
-local screen,screenSide=chooseScreen(); TempOS.screen=screen; TempOS.screenSide=screenSide; term.redirect(screen)
+screen,screenSide=chooseScreen()
+TempOS.screen=screen
+TempOS.screenSide=screenSide
+term.redirect(screen)
 P.scan(); N.init()
 if not Security.login() then term.clear(); term.setCursorPos(1,1); print("Invalid password."); print("Rebooting..."); sleep(2); os.reboot() end
 local apps={
@@ -29,8 +49,13 @@ function TempOS.appLaunch(id)
   local a=apps[id]; if not a or not fs.exists(a.path) then return false,"application missing" end
   local p=Proc.start(a.name); local ok,err=xpcall(function() dofile(a.path) end,debug.traceback); Proc.finish(p.pid,ok and "STOPPED" or "CRASHED"); if not ok then TempOS.log("crash",id.."\n"..err); return false,err end; return true
 end
-function TempOS.shutdown(reboot) if screen and screen~=term then pcall(screen.clear) end; term.redirect(term.native()); if reboot then os.reboot() else os.shutdown() end end
+function TempOS.shutdown(reboot)
+  pcall(screen.clear)
+  if monitor and monitor~=screen then pcall(monitor.clear) end
+  term.redirect(native)
+  if reboot then os.reboot() else os.shutdown() end
+end
 function TempOS.taskList() local out={{pid=0,name="Desktop",status="Running",memory=0}}; for _,p in ipairs(Proc.list()) do table.insert(out,p) end; return out end
 local Desktop=dofile("/ui/desktop.lua"); local ok,err=xpcall(function() Desktop.run(TempOS) end,debug.traceback)
-if not ok then TempOS.log("crash","desktop\n"..err); term.redirect(term.native()); term.setBackgroundColor(colors.black); term.setTextColor(colors.red); term.clear(); term.setCursorPos(1,1); print("TempOS desktop crashed."); print(err); print(); print("Press Enter to reboot."); os.pullEvent("key"); os.reboot() end
+if not ok then TempOS.log("crash","desktop\n"..err); term.redirect(native); term.setBackgroundColor(colors.black); term.setTextColor(colors.red); term.clear(); term.setCursorPos(1,1); print("TempOS desktop crashed."); print(err); print(); print("Press Enter to reboot."); os.pullEvent("key"); os.reboot() end
 TempOS.saveSettings()
