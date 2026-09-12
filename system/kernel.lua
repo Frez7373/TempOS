@@ -1,4 +1,4 @@
-local VERSION="1.0.1"
+local VERSION="1.0.0"
 local T=dofile("/ui/theme.lua")
 local P=dofile("/system/peripherals.lua")
 local N=dofile("/system/network.lua")
@@ -6,7 +6,7 @@ local Proc=dofile("/system/process.lua")
 local Security=dofile("/system/security.lua")
 local E=dofile("/system/events.lua").new()
 local DATA="/tempOS/config/settings.tbl"
-fs.makeDir("/tempOS/config"); fs.makeDir("/tempOS/logs")
+fs.makeDir("/tempOS/config"); fs.makeDir("/tempOS/data"); fs.makeDir("/tempOS/logs"); fs.makeDir("/tempOS/backups")
 local function loadSettings()
   if fs.exists(DATA) then local f=fs.open(DATA,"r"); local s=f.readAll(); f.close(); local ok,v=pcall(textutils.unserialise,s); if ok and type(v)=="table" then return v end end
   return {computerName="TempOS PC",accent="blue",sounds=true,lockMinutes=0}
@@ -24,7 +24,7 @@ local function chooseScreen()
     if d.type=="monitor" then
       local ok,m=pcall(peripheral.wrap,d.side)
       if ok and m then
-        if m.setTextScale then pcall(m.setTextScale,1) end
+        pcall(m.setTextScale,1)
         local okSize,mw,mh=pcall(m.getSize)
         if okSize and type(mw)=="number" and type(mh)=="number" then
           monitor=m
