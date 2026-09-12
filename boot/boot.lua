@@ -1,4 +1,4 @@
-local VERSION = "1.0.0"
+local VERSION = "1.0.1"
 local function c(s) return fs.combine("/", s) end
 term.setBackgroundColor(colors.black)
 term.setTextColor(colors.white)
@@ -18,7 +18,7 @@ end
 local ok=true
 ok = step("Checking filesystem",function() fs.makeDir("/tempOS"); fs.makeDir("/tempOS/config"); fs.makeDir("/tempOS/data"); fs.makeDir("/tempOS/logs"); fs.makeDir("/tempOS/backups") end) and ok
 ok = step("Checking hardware",function() peripheral.getNames() end) and ok
-ok = step("Checking network",function() if not http then error("HTTP API unavailable") end end) and ok
+ok = step("Checking network",function() if http and http.checkURL then local okCheck=pcall(http.checkURL,"https://raw.githubusercontent.com"); if not okCheck then error("HTTP API unavailable") end end end) and ok
 ok = step("Loading kernel",function() assert(fs.exists("/system/kernel.lua"),"kernel missing") end) and ok
 ok = step("Loading drivers",function() assert(fs.exists("/system/peripherals.lua"),"device service missing") end) and ok
 ok = step("Starting TempOS",function() end) and ok
