@@ -13,7 +13,16 @@ if not ok then
   print("[R] Recovery  [Q] Shutdown")
   while true do
     local _, key = os.pullEvent("key")
-    if key == keys.r then shell.run("/boot/recovery.lua"); return end
+    if key == keys.r then
+      local fn, loadErr = loadfile("/boot/recovery.lua")
+      if fn then
+        local rok, runErr = pcall(fn)
+        if not rok then print("Recovery error: " .. tostring(runErr)) end
+      else
+        print("Recovery missing: " .. tostring(loadErr))
+      end
+      return
+    end
     if key == keys.q then os.shutdown(); return end
   end
 end
