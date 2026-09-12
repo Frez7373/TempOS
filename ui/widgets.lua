@@ -1,4 +1,4 @@
-local T=require("ui.theme")
+local T=dofile("/ui/theme.lua")
 local M={}
 function M.button(x,y,w,label,active) T.fill(x,y,x+w-1,y,active and T.accent or T.panel); T.text(x+1,y,(label or ""):sub(1,w-2),T.text); return {x=x,y=y,w=w,h=1} end
 function M.hit(b,tx,ty) return tx>=b.x and tx<b.x+b.w and ty>=b.y and ty<=b.y+b.h-1 end
