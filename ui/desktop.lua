@@ -3,7 +3,7 @@ local W=dofile("/ui/widgets.lua")
 local M={}
 local function draw(ops)
   local w,h=term.getSize(); T.fill(1,1,w,h,T.bg)
-  T.fill(1,1,w,2,T.panel); T.text(2,1,"TempOS",T.text); T.text(w-8,1,textutils.formatTime(os.time(),true),T.text)
+  T.fill(1,1,w,2,T.panel); T.text(2,1,"TempOS",T.fg); T.text(w-8,1,textutils.formatTime(os.time(),true),T.fg)
   local online=TempOS.network.online; T.text(math.max(2,w-28),1,online and "NET: ONLINE" or "NET: OFFLINE",online and T.success or T.danger)
   T.fill(1,h-1,w,h,T.panel); T.text(2,h,"[MENU]",T.accent2); T.text(math.floor(w/2)-4,h,"TempOS 1.0.0",T.muted); T.text(w-8,h,"[OFF]",T.danger)
   local x,y=2,4; local ids={}; for id in pairs(TempOS.apps) do table.insert(ids,id) end; table.sort(ids)
