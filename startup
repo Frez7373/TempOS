@@ -1,0 +1,28 @@
+-- TempOS startup shim
+-- CC:Tweaked 1.16.5 compatible: no require(), no external Lua modules.
+local boot = "/tempOS/boot/loader.lua"
+if fs.exists(boot) then
+  local ok, err = pcall(dofile, boot)
+  if not ok then
+    term.clear(); term.setCursorPos(1,1)
+    print("TempOS Boot Error")
+    print("")
+    print(tostring(err))
+    print("")
+    print("[R] Recovery   [Q] Shutdown")
+    while true do
+      local e,k = os.pullEvent("key")
+      if k == keys.r then
+        local r = "/tempOS/recovery/recovery.lua"
+        if fs.exists(r) then pcall(dofile, r) end
+        break
+      elseif k == keys.q then
+        os.shutdown()
+      end
+    end
+  end
+else
+  term.clear(); term.setCursorPos(1,1)
+  print("TempOS is not installed.")
+  print("Run the TempOS installer first.")
+end
