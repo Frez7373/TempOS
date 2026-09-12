@@ -1,6 +1,6 @@
 local BASE="https://raw.githubusercontent.com/Frez7373/TempOS/main/"
 local manifestURL=BASE.."manifest.lua"
-term.setTextColor(colors.cyan); print("TempOS Installer 1.0.0"); print("Downloading release manifest...")
+term.setTextColor(colors.cyan); print("TempOS Installer 1.0.1"); print("Downloading release manifest...")
 local r=http.get(manifestURL); if not r then error("Unable to reach GitHub. Check HTTP/network settings.") end
 local src=r.readAll(); r.close(); local chunk=assert(load(src,"manifest","t",{})); local m=chunk(); if type(m)~="table" then error("Invalid manifest") end
 fs.makeDir("/tempOS/logs"); fs.makeDir("/tempOS/config");
