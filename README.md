@@ -1,70 +1,47 @@
-# TempOS
+# TempOS 1.0.0
 
-**TempOS 1.0.0** is a modular graphical operating system for CC:Tweaked targeting Minecraft 1.16.5.
+TempOS is a modular desktop operating system for CC:Tweaked on Minecraft 1.16.5.
 
 ## Highlights
-
-- Bootloader with hardware/filesystem checks and recovery entry
-- Modular kernel and event bus
-- Touchscreen-aware desktop and GUI widgets
-- External monitor detection
-- Modem/network service with a unified API
-- Peripheral/device manager
-- Settings, File Manager, Terminal, Calculator, Clock
-- System Information, Task Manager, Text Editor, Security
-- Network and Updater applications
-- Safe Mode and Recovery Mode
-- Crash/boot logging
-- One-command network installer
+- BIOS-style bootloader with hardware/filesystem/network checks and progress animation
+- Recovery mode and safe-mode support from the existing TempOS core
+- Touchscreen desktop with keyboard fallback
+- Modular system services for networking, peripherals, processes and security
+- Settings, File Manager, Terminal, Calculator, Clock, System Info, Task Manager, Text Editor, Devices, Network, Security and Updater apps
+- External monitor support
+- Modem, printer, speaker and disk-drive detection/testing
+- Crash containment around application and desktop execution
+- Persistent settings and logs under `/tempOS`
+- One-command HTTP installer
 
 ## Requirements
-
 - Minecraft 1.16.5
 - CC:Tweaked
-- HTTP API enabled for installation and updates
-- A standard Computer or Advanced Computer
-- Optional: Monitor, Modem, Speaker, Printer, Disk Drive
+- Computer or Advanced Computer
+- Optional monitor, modem, printer, speaker and disk drive
 
 ## Installation
-
-Run on a CC:Tweaked computer:
+Enable the CC:Tweaked HTTP API, then run:
 
 ```text
 wget run https://raw.githubusercontent.com/Frez7373/TempOS/main/install.lua
 ```
 
-The installer downloads the release manifest, creates directories and installs the current TempOS release.
-
-## Desktop controls
-
-Touch or click application buttons. Keyboard is supported for terminal-style apps and recovery. `F4` requests shutdown from the desktop.
+The installer downloads the release manifest and all required files automatically.
 
 ## Recovery
+Recovery is available through `boot/recovery.lua` and is entered automatically if the bootloader detects a critical startup failure.
 
-The bootloader can enter recovery after a failed startup. Recovery provides Normal Boot, Safe Mode, Repair, Factory Reset, Logs, Recovery Shell and shutdown paths.
-
-## Architecture
-
-```text
-startup.lua
-└── boot/boot.lua
-    └── system/kernel.lua
-        ├── system/events.lua
-        ├── system/process.lua
-        ├── system/network.lua
-        ├── system/peripherals.lua
-        └── ui/desktop.lua
-            └── apps/*
-```
-
-## Applications
-
-`settings`, `filemanager`, `terminal`, `calculator`, `clock`, `systeminfo`, `taskmanager`, `editor`, `security`, `devices`, `network`, `updater`.
+## Project structure
+- `boot/` — bootloader and recovery
+- `system/` — kernel services
+- `ui/` — theme, widgets and desktop
+- `apps/` — user applications
+- `bin/` — recovery helpers
+- `config/`, `data/`, `tempOS/` — runtime data and logs
 
 ## Troubleshooting
+Boot failures are logged to `/tempOS/logs/boot.log`. Application crashes are written to `/tempOS/logs/crash.log`. You can use recovery to inspect logs or repair the installation.
 
-If networking does not work, enable the CC:Tweaked HTTP API and ensure the computer can access GitHub. If a monitor is unavailable, TempOS falls back to the computer terminal. Missing peripherals are treated as optional and should not prevent boot.
-
-## Versioning
-
-TempOS follows `MAJOR.MINOR.PATCH` release numbering.
+## License
+MIT
